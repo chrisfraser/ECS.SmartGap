@@ -11,7 +11,7 @@
             /* App custom styles */
         </style>
 
-        <script src="scripts/cordova-1.7.0rc1.js"></script>
+        <script src="phonegap.js"></script>
         <script src="scripts/jquery-1.7.2.min.js"></script>
         <script src="scripts/jquery.mobile-1.1.0.min.js"></script>
     </head>
@@ -81,18 +81,14 @@
         </div>
         <div data-role="page" id="page3">
             <div data-theme="a" data-role="header" data-position="fixed">
+                <a href="#pageHome" data-transition="fade" data-icon="home" data-iconpos="notext">Home</a>
                 <h3>
                     Map
                 </h3>
             </div>
             <div data-role="content">
                 <img src="https://maps.googleapis.com/maps/api/staticmap?center=Madison,%20WI&amp;zoom=14&amp;size=288x200&amp;markers=Madison,%20WI&amp;sensor=false" height="200" width="288" />
-                <a data-role="button" data-transition="fade" data-theme="b" href="Locate" data-icon="search" data-iconpos="left">
-                    Locate
-                </a>
-                <a data-role="button" data-transition="fade" data-theme="b" href="#page1" data-icon="home" data-iconpos="left">
-                    Home
-                </a>
+                
             </div>
         </div>
         <script>
