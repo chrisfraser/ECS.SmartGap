@@ -68,13 +68,15 @@
                     </div>
                     <div data-role="collapsible" data-collapsed="true">
                         <h3>
-                            Capture
+                            Accelerometer
                         </h3>
+                        <p id="deviceAccelerometer">Loading device Accelerometer...</p>
                     </div>
                     <div data-role="collapsible" data-collapsed="true">
                         <h3>
-                            Compass and Accelerometer
+                            Compass
                         </h3>
+                        <p id="deviceCompass">Loading device Compass...</p>
                     </div>
                 </div>
             </div>
@@ -87,8 +89,7 @@
                 </h3>
             </div>
             <div data-role="content">
-                <img src="https://maps.googleapis.com/maps/api/staticmap?center=Madison,%20WI&amp;zoom=14&amp;size=288x200&amp;markers=Madison,%20WI&amp;sensor=false" height="200" width="288" />
-                
+                <img src="https://maps.googleapis.com/maps/api/staticmap?center=Madison,%20WI&amp;zoom=14&amp;size=288x200&amp;markers=Madison,%20WI&amp;sensor=false" height="200" width="288" />                
             </div>
         </div>
         <script>
@@ -106,6 +107,8 @@
                     deviceProperties();
                     checkConnection();
                     checkDeviceGPS();
+					checkDeviceAccelerometer();
+					checkDeviceCompass();
                 }
 
                 function deviceProperties(){
@@ -157,6 +160,34 @@
 
                     navigator.geolocation.getCurrentPosition(onGeolocationSuccess, onGeolocationError);
                 }
+
+				function checkDeviceAccelerometer(){
+					var onSuccess = function(acceleration) {
+						$('#deviceAccelerometer').html('Acceleration X: ' + acceleration.x + '\n' +
+							  'Acceleration Y: ' + acceleration.y + '\n' +
+							  'Acceleration Z: ' + acceleration.z + '\n' +
+							  'Timestamp: '      + new Date(acceleration.timestamp) + '\n');
+					};
+
+					var onError = function() {
+						$('#deviceAccelerometer').html('onError!');
+					};
+
+					navigator.accelerometer.getCurrentAcceleration(onSuccess, onError);
+				}
+
+				function checkDeviceCompass(){
+					var onSuccess = function(acceleration) {
+						$('#deviceCompass').html('Heading: ' + heading.magneticHeading);
+
+					};
+
+					var onError = function() {
+						$('#deviceCompass').html('CompassError: ' + error.code);
+					};
+
+					navigator.compass.getCurrentHeading(onSuccess, onError);
+				}
 
                 $('body').on('click','#updateDeviceStatus',function(){                    
                     updateDeviceStatus();
