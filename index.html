@@ -162,31 +162,31 @@
                 }
 
 				function checkDeviceAccelerometer(){
-					var onSuccess = function(acceleration) {
+					var onAccelerometerSuccess = function(acceleration) {
 						$('#deviceAccelerometer').html('Acceleration X: ' + acceleration.x + '\n' +
 							  'Acceleration Y: ' + acceleration.y + '\n' +
 							  'Acceleration Z: ' + acceleration.z + '\n' +
 							  'Timestamp: '      + new Date(acceleration.timestamp) + '\n');
 					};
 
-					var onError = function() {
+					var onAccelerometerError = function() {
 						$('#deviceAccelerometer').html('onError!');
 					};
 
-					navigator.accelerometer.getCurrentAcceleration(onSuccess, onError);
+					navigator.accelerometer.getCurrentAcceleration(onAccelerometerSuccess, onAccelerometerError);
 				}
 
 				function checkDeviceCompass(){
-					var onSuccess = function(acceleration) {
+					$('#deviceCompass').html('Loading device Compass......');
+					var onCompassSuccess = function(acceleration) {
 						$('#deviceCompass').html('Heading: ' + heading.magneticHeading);
-
 					};
 
-					var onError = function() {
+					var onCompassError = function() {
 						$('#deviceCompass').html('CompassError: ' + error.code);
 					};
 
-					navigator.compass.getCurrentHeading(onSuccess, onError);
+					navigator.compass.getCurrentHeading(onCompassSuccess, onCompassError);
 				}
 
                 $('body').on('click','#updateDeviceStatus',function(){                    
