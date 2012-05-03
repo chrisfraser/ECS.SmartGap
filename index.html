@@ -98,17 +98,42 @@
                 // Wait for Cordova to load
                 //
                 document.addEventListener("deviceready", onDeviceReady, false);
+				
+				//Declare variables for watches
+				var watchGPS = null, 
+					watchAccelerometer = null, 
+					watchCompass = null;
 
                 function onDeviceReady(){
-                    updateDeviceStatus();
+					//PhoneGap is ready to use
                 }
-
-                function updateDeviceStatus(){
+				
+                function updateDeviceStatusStart(){
                     deviceProperties();
                     checkConnection();
                     checkDeviceGPS();
 					checkDeviceAccelerometer();
 					checkDeviceCompass();
+                }
+				
+                function updateDeviceStatusStop(){					
+					// Stop watching the GPS
+					if (watchGPS != null) {
+						navigator.geolocation.clearWatch(watchGPS);
+						watchGPS = null;
+					}     
+					
+					// Stop watching the acceleration
+					if (watchAccelerometer) {
+						navigator.accelerometer.clearWatch(watchAccelerometer);
+						watchAccelerometer = null;
+					}
+					
+					// Stop watching the compass
+					if (watchCompass) {
+						navigator.compass.clearWatch(watchCompass);
+						watchCompass = null;
+					}
                 }
 
                 function deviceProperties(){
@@ -137,7 +162,6 @@
 
 
                 function checkDeviceGPS(){
-
                     // onSuccess Geolocation
                     //
                     var onGeolocationSuccess = function(position) {
@@ -157,8 +181,12 @@
                         $('#deviceGPS').html('code: '    + error.code    + '\n' +
                               'message: ' + error.message + '\n');
                     };
-
-                    navigator.geolocation.getCurrentPosition(onGeolocationSuccess, onGeolocationError);
+					
+					// Options: retrieve the location every 3 seconds
+					var options = { frequency: 3000 };
+					
+					// Start the GPS watch passing callbacks and options
+                    watchGPS = navigator.geolocation.watchPosition(onGeolocationSuccess, onGeolocationError, options);
                 }
 
 				function checkDeviceAccelerometer(){
@@ -172,8 +200,12 @@
 					var onAccelerometerError = function() {
 						$('#deviceAccelerometer').html('onError!');
 					};
+					
+					// Update acceleration every 3 seconds
+					var options = { frequency: 3000 };
 
-					navigator.accelerometer.getCurrentAcceleration(onAccelerometerSuccess, onAccelerometerError);
+					// Start the Accelerometer watch passing callbacks and options
+					watchAccelerometer = navigator.accelerometer.watchAcceleration(onAccelerometerSuccess, onAccelerometerError, options);
 				}
 
 				function checkDeviceCompass(){
@@ -185,12 +217,25 @@
 					var onCompassError = function() {
 						$('#deviceCompass').html('CompassError: ' + error.code);
 					};
+					
+					// Update compass every 3 seconds
+					var options = { frequency: 3000 };
 
-					navigator.compass.getCurrentHeading(onCompassSuccess, onCompassError);
+					// Start the Compass watch passing callbacks and options
+					watchCompass = navigator.compass.watchHeading(onCompassSuccess, onCompassError, options);
 				}
+				
+				$('body').on('pagebeforeshow','#pageDeviceStatus',function(){
+					updateDeviceStatusStart();
+				});
+				
+				$('body').on('pagehide','#pageDeviceStatus',function(){
+					updateDeviceStatusStop();
+				});
 
-                $('body').on('click','#updateDeviceStatus',function(){                    
-                    updateDeviceStatus();
+                $('#pageDeviceStatus').on('click','#updateDeviceStatus',function(){
+					updateDeviceStatusStop();
+					updateDeviceStatusStart();
                 });
             });
         </script>
