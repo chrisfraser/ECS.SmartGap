@@ -99,7 +99,24 @@
         </div>
         <script>
             $(function(){
-
+				var console_log;                // Debugging div on device
+				var canvas_ctx;                 // HTML canvas 2d context
+				var SPEED = 10;                 // Canvas redraw speed in milliseconds and accelerometer frequency
+				var DISTANCE_FACTOR = .1;       // Factor to adjust accelerometer values to screen distance. Cordova 1.6 changed to values to be Android compatible which appeared to be * 10. For Cordova 1.5 make this value 1.
+				var ax = 0;                     // Acceleration x axis (Accelerometer value adjusted for direction)
+				var ay = 0;                     // Acceleration y axis (Accelerometer value adjusted for direction)
+				var x;                          // Circle x position
+				var y;                          // Circle y position
+				var vx = 0;                     // Velocity x axis
+				var vy = 0;                     // Velocity y axis
+				var WIDTH = 320;                // Width of canvas
+				var HEIGHT = 300;               // Height of canvas
+				var RADIUS = 50;                // Width of circle object
+				var CIRCLE_COLOR = "#f00";      // Circle color
+				var CANVAS_COLOR = "#FAF7F8";   // Color of canvas background
+				var drawID;                     // Draw time interval.
+				var playing = true;             // Boolean if animation is playing.
+				
                 // Wait for Cordova to load
                 //
                 document.addEventListener("deviceready", onDeviceReady, false);
